@@ -22,9 +22,6 @@ class SSMLoader(BaseLoader):
     def get_setting(self, section, key):
         return self._settings[f"{section}/{key}"]
 
-    # def load(self):
-    #     return
-
     def __str__(self):
         return f"SSM from {self.path} region {self.aws_region}"
 

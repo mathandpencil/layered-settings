@@ -4,7 +4,7 @@ import logging
 import os
 import sys
 from configparser import RawConfigParser
-from .loaders import BaseLoader, ConfigParserLoader
+from .loaders import BaseLoader, ConfigParserLoader, DictLoader
 
 logger = logging.getLogger(__name__)
 
@@ -18,21 +18,21 @@ def initialize_settings(sources):
 
         try:
             if isinstance(source, BaseLoader):
-                _sources.append(source.get_setting)
+                _sources.append(source)
                 logger.debug(f"Registered {source}.")
 
             elif isinstance(source, dict):
-                _sources.append(lambda section, key: source[section][key])
+                _sources.append(DictLoader(source))
                 logger.debug(f"Registered dictionary source.")
 
             elif callable(source):
-                _sources.append(source)
+                _sources.append(CallableLoader(source))
                 logger.debug(f"Registered callable source {source}.")
 
             else:
                 if os.path.exists(source):
                     if isinstance(source, str) and source.endswith(".ini"):
-                        _sources.append(ConfigParserLoader(source).get_setting)
+                        _sources.append(ConfigParserLoader(source))
                     logger.debug(f"Registered .ini filename source from {source}")
                 else:
                     # print(f"Did not register .ini filename source from {source}, file does not exist.")
@@ -48,17 +48,17 @@ def initialize_settings(sources):
 def _get_config_setting(initial_sources, sources, section, key):
     """ Iterate through sources and return first-available. """
 
-    for source_desc, source in zip(initial_sources, sources):
+    for ctr, (source_desc, source) in enumerate(zip(initial_sources, sources)):
         try:
-            ret = source(section, key)
-            print(f"[{section}] {key} is set to {ret}.")
+            ret = source.get_setting(section, key)
+            logger.debug(f"[{section}] {key} was set from source {ctr+1}).")
             return ret
         except KeyError:
             continue
         except Exception as exc:
             logger.exception(f"Exception while getting config [{section}] {key} from {source_desc}, skipping: {exc}")
             continue
-    print(f"Failed to find [{section}] {key} in {initial_sources}.")
+    logger.warning(f"Failed to find [{section}] {key} in {initial_sources}.")
     raise KeyError(key)
 
 
