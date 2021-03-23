@@ -20,7 +20,7 @@
 
 -   Initial release.
 
-[unreleased]: https://github.com/mathandpencil/layered-settings/compare/v1.0.1..HEAD
+[unreleased]: https://github.com/mathandpencil/layered-settings/compare/v1.0.2..HEAD
 [1.0.2]: https://github.com/mathandpencil/layered-settings/releases/tag/v1.0.2
 [1.0.1]: https://github.com/mathandpencil/layered-settings/releases/tag/v1.0.1
 [1.0.0]: https://github.com/mathandpencil/layered-settings/releases/tag/v1.0.0
