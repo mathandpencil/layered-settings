@@ -18,6 +18,20 @@ class LayeredSettingsTests(unittest.TestCase):
         with self.assertRaises(KeyError):
             self.assertEqual(None, get_setting("section1", "key1"))
 
+    def test_dict_settings(self):
+        get_setting = initialize_settings(
+            [
+                {
+                    "general": {"CLIENT_NAME": "client"},
+                }
+            ]
+        )
+
+        with self.assertRaises(KeyError):
+            self.assertEqual(None, get_setting("section1", "key1"))
+
+        self.assertEqual("client", get_setting("general", "CLIENT_NAME"))
+
     def test_env_settings(self):
         get_setting = initialize_settings([loaders.EnvLoader("APP__{section}__{key}")])
 
@@ -38,6 +52,21 @@ class LayeredSettingsTests(unittest.TestCase):
 
             with self.assertRaises(KeyError):
                 self.assertEqual(None, get_setting("section2", "key2"))
+
+    def test_env_settings_with_hyphen(self):
+        get_setting = initialize_settings([loaders.EnvLoader("APP__{section}__{key}")])
+
+        with self.assertRaises(KeyError):
+            self.assertEqual(None, get_setting("section-1", "key1"))
+
+        with patch.dict(
+            "os.environ",
+            {
+                "APP__section-1__key1": "abc",
+            },
+        ):
+
+            self.assertEqual("abc", get_setting("section-1", "key1"))
 
     def test_normal_usage(self):
         ALLOW_SSM_CONFIGURATION = False

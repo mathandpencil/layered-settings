@@ -35,6 +35,12 @@ get_setting = initialize_settings(
         # Next priority is a "user" settings file.
         os.path.expanduser("~/.app-settings.ini"),
 
+        # You can include a dictionary in the sources too...
+        {
+            "general": {"CLIENT_NAME": "client"},
+            "email": {"EMAIL_HOST": "smtp.example.com", "EMAIL_PORT": 25},
+        },
+
         # If we are able/willing to reach out to AWS, do so.  A `None` in the initialize_settings sources
         # will simply be ignored.
         loaders.SSMLoader(f"/app/stage/", aws_region="us-east-1") if ALLOW_SSM_CONFIGURATION else None,

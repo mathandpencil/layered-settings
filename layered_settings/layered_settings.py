@@ -22,7 +22,7 @@ def initialize_settings(sources):
                 logger.debug(f"Registered {source}.")
 
             elif isinstance(source, dict):
-                _sources.append(lambda section, key: source[key])
+                _sources.append(lambda section, key: source[section][key])
                 logger.debug(f"Registered dictionary source.")
 
             elif callable(source):
