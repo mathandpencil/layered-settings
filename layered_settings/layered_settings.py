@@ -4,10 +4,9 @@ import logging
 import os
 import sys
 from configparser import RawConfigParser
-from .loaders import BaseLoader, ConfigParserLoader, DictLoader
+from .loaders import BaseLoader, ConfigParserLoader, DictLoader, CallableLoader
 
 logger = logging.getLogger(__name__)
-
 
 def initialize_settings(sources):
     _sources = []
@@ -38,20 +37,24 @@ def initialize_settings(sources):
                     # print(f"Did not register .ini filename source from {source}, file does not exist.")
                     pass
         except Exception as exc:
-            logger.debug(f"Exception while registering source {source}, quitting: {exc}")
+            logger.exception(f"Exception while registering source {source}, quitting: {exc}")
 
-            sys.exit(1)
+            raise
 
-    return lambda section, key: _get_config_setting(sources, _sources, section, key)
+    return functools.partial(_get_config_setting, sources, _sources)
 
 
-def _get_config_setting(initial_sources, sources, section, key):
+def _get_config_setting(initial_sources, sources, section, key, is_sensitive=True):
     """ Iterate through sources and return first-available. """
 
     for ctr, (source_desc, source) in enumerate(zip(initial_sources, sources)):
         try:
             ret = source.get_setting(section, key)
-            logger.debug(f"[{section}] {key} was set from source {ctr+1}).")
+            if is_sensitive:
+                logger.info(f"[{section}] {key} was set to XXXX from source {ctr+1} ({source}).")
+            else:
+                logger.info(f"[{section}] {key} was set to {ret} from source {ctr+1} ({source}).")
+
             return ret
         except KeyError:
             continue
@@ -63,16 +66,17 @@ def _get_config_setting(initial_sources, sources, section, key):
 
 
 def parse_bool(b):
-    """ Useful for environment variables, intelligently converts any reasonable string to a Python bool. """
+    """ Useful for environment variables, intelligently converts any reasonable string to a Python bool,
+    or None if it is None or empty/whitespace string."""
 
     if b is None:
-        return None
-    if b == "":
         return None
     if b is True:
         return True
     if b is False:
         return False
+    if b.strip() == "":
+        return None
     b = str(b).upper()[0]
     if b in ["Y", "1", "T"]:
         return True

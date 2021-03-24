@@ -7,6 +7,9 @@ logger = logging.getLogger(__name__)
 
 
 class EnvLoader(BaseLoader):
+    """ Load from the os.environ.  Pass a format string containing {section} and {key} markers, such as
+    'APP__{section}__{key}' or just '{key}'.""" 
+    
     def __init__(self, format):
         self.env_var_format = format
 
