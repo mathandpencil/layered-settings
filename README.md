@@ -2,7 +2,7 @@
 
 `layered-settings` is a simple and configurable hierarchical settings library for Python, including Django, Flask, or any other
 scripts that need settings from potentially a variety of sources. With it you can load
-settings from the environment, Amazon's SSM, local configparser .ini files, and more.
+settings from the environment, Amazon's SSM, Amazon's Secrets Manager, local configparser .ini files, and more.
 
 ## Installation
 
@@ -10,9 +10,9 @@ The package is available on pip as `layered-settings`. Run:
 
 `pip install layered-settings`
 
-If you want to use the AWS SSM layer, include the [ssm] extra:
+If you want to use the AWS SSM layer or Secrets Manager layer, include the [aws] extra:
 
-`pip install layered-settings[ssm]`
+`pip install layered-settings[aws]`
 
 then import via:
 
@@ -40,6 +40,10 @@ get_setting = initialize_settings(
             "general": {"CLIENT_NAME": "client"},
             "email": {"EMAIL_HOST": "smtp.example.com", "EMAIL_PORT": 25},
         },
+
+        # Secrets Manager works similar to SSM. If the secret is a json object, the object's keys will be the layered setting "key"
+        # If the secret is just plain text, the secret's name will be used as the key
+        loaders.SecretsManagerLoader(f"/app/stage/", aws_region="us-east-1") if ALLOW_SSM_CONFIGURATION else None,
 
         # If we are able/willing to reach out to AWS, do so.  A `None` in the initialize_settings sources
         # will simply be ignored.
