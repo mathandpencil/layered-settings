@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [1.1.0] - 2024-05-16
+
+-   Added support for AWS Secrets Manager.
+
+### Changed
+
+-   Made Env explicitly case insensitive.
+
 ## [1.0.5] - 2021-04-25
 
 ### Changed
