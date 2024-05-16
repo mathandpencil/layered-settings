@@ -8,7 +8,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name="layered-settings",
     version="1.1.0",
-    description="Flexible, simple, extensible settings loader from environment, AWS SSM, configparser .ini, and more.",
+    description="Flexible, simple, extensible settings loader from environment, AWS SSM, AWS Secrets Manager, configparser .ini, and more.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/mathandpencil/layered-settings",
