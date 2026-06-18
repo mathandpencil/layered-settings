@@ -78,7 +78,11 @@ def _load_from_secrets_manager(path, aws_region):
         # otherwise, the secret_key will remain intact and the plaintext value will assigned to it.
         arn = secret["ARN"]
         key = secret["Name"][len(path) :]
-        secret_string = secrets_manager_client.get_secret_value(SecretId=arn)["SecretString"]
+        try:
+            secret_string = secrets_manager_client.get_secret_value(SecretId=arn)["SecretString"]
+        except secrets_manager_client.exceptions.ResourceNotFoundException:
+            logger.warning(f"{secret['Name']} does not contain an AWSCURRENT version! Skipping...")
+            continue
         try:
             secret = json.loads(secret_string)
             key = key.split("/")[0]
