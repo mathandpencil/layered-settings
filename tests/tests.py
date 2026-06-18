@@ -136,8 +136,7 @@ class SecretsManagerLoaderTests(unittest.TestCase):
         return patch.object(secrets_manager_loader, "boto3", boto3_mock)
 
     def test_skips_secret_without_awscurrent_version(self):
-        """A secret with no AWSCURRENT version is skipped, not fatal, and does
-        not leak the previous secret's value into its key."""
+        """A secret with no AWSCURRENT version is skipped."""
         path = "/shared/global/"
         with self._patched_loader(
             {
