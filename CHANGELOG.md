@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-06-18
+
+### Fixed
+
+-   Secrets Manager loader now skips secrets that have no `AWSCURRENT` version instead of crashing with `ResourceNotFoundException`.
+
 ## [1.1.0] - 2024-05-16
 
 -   Added support for AWS Secrets Manager.
@@ -40,7 +46,9 @@
 
 -   Initial release.
 
-[unreleased]: https://github.com/mathandpencil/layered-settings/compare/v1.0.5..HEAD
+[unreleased]: https://github.com/mathandpencil/layered-settings/compare/v1.1.1..HEAD
+[1.1.1]: https://github.com/mathandpencil/layered-settings/compare/v1.1.0..v1.1.1
+[1.1.0]: https://github.com/mathandpencil/layered-settings/compare/v1.0.5..v1.1.0
 [1.0.5]: https://github.com/mathandpencil/layered-settings/releases/tag/v1.0.5
 [1.0.3]: https://github.com/mathandpencil/layered-settings/releases/tag/v1.0.3
 [1.0.2]: https://github.com/mathandpencil/layered-settings/releases/tag/v1.0.2
