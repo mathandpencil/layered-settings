@@ -1,6 +1,46 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "layered-settings"
+version = "1.1.1"
+description = "Flexible, simple, extensible settings loader from environment, AWS SSM, AWS Secrets Manager, configparser .ini, and more."
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Scott Stafford", email = "scott.stafford+layered@gmail.com" },
+]
+keywords = ["settings", "configuration", "ssm", "secrets-manager", "aws", "configparser"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+[project.optional-dependencies]
+ssm = ["boto3"]
+aws = ["boto3"]
+
+[project.urls]
+Homepage = "https://github.com/mathandpencil/layered-settings"
+Changelog = "https://github.com/mathandpencil/layered-settings/blob/main/CHANGELOG.md"
+
+[tool.hatch.build.targets.wheel]
+packages = ["layered_settings"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "layered_settings",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+]
+
 [tool.black]
 line-length = 120
-target-version = ['py37']
+target-version = ['py38']
 include = '\.pyi?$'
 exclude = '''
 /(
